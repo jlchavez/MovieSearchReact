@@ -10,18 +10,22 @@ namespace MovieSearch.Services.Remote
 {
     public class MoviesStore : IMoviesStore
     {
+        static MoviesStore()
+        {
+              _jsonOptions = new(() => new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });      
+        }
+        
         public MoviesStore(IMemoryCache memoryCache)
         {
             MemoryCache = memoryCache;
-            _jsonOptions = new(() => new JsonSerializerOptions
-                        {
-                            PropertyNameCaseInsensitive = true
-                        });
         }
 
         public IMemoryCache MemoryCache { get; }
 
-        private Lazy<JsonSerializerOptions> _jsonOptions;
+        private static Lazy<JsonSerializerOptions> _jsonOptions;
 
         public async Task<Paged<Movie>?> GetAsync(string? name = null, int? page = 1)
         {
